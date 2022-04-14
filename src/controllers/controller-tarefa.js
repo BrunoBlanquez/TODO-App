@@ -3,6 +3,6 @@ module.exports = (app) => {
     respo.send(`Tarefa`)
   })
   app.post('/tarefas', function(req, respo) {
-    respo.send(`Tarefas adicionadas`)
+    respo.json(req.body.tarefa)
   })
 }

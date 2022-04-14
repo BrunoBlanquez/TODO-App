@@ -3,6 +3,6 @@ module.exports = (app) => {
     respo.send('usuario')
   })
   app.post('/usuario', function(req, respo) {
-    respo.send('Novos usuarios adicionados')
+    respo.json(req.body.nome)
   })
 }

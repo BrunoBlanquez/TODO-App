@@ -3,6 +3,9 @@
 const express = require('express')
 const app = express()
 
+// body-parser
+app.use(express.json())
+
 const usuario = require('./controllers/controller-usuario')
 const solicitante = require('./controllers/controller-solicitante')
 const tarefa = require('./controllers/controller-tarefa')
