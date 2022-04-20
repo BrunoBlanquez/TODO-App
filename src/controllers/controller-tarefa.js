@@ -43,6 +43,41 @@ const Tarefa = require("../models/tarefa")
     }
     respo.send(`Tarefa: ${nomeParametro} deletada`)
   })
+
+  app.put('/tarefa/:titulo', (req, respo) => {
+    // Pego o parâmetro
+    const tituloParametro = req.params.titulo;
+    // req.body é o corpo de onde são enviados os dados
+    const body = req.body
+    // Pego o index no banco de dados
+    const indexTarefa = bd.tarefa.findIndex(tarefa => tarefa.titulo == tituloParametro)
+    
+    // If que verifica se encontrou o index
+    if (indexTarefa > -1) {
+      // Dados antigos do usuario
+      const dadoAntigoTarefa = bd.tarefa[indexTarefa]
+      // Novos dados do usuario
+        // Instanciamos uma nova classe para atualizar os dados do usuário
+        // Se eu tenho um dado novo, ele entra no body.nome. Se eu não tenho dado novo (se o body for vazio), mantém o dado antigo
+        // Uso "OU" para definir qual dado vou usar: Se body.nome for vazio, mantem a informação antiga
+      const dadoNovaTarefa = new Tarefa(
+      body.titulo || dadoAntigoTarefa.titulo, 
+      body.descricao || dadoAntigoTarefa.descricao,
+      body.status || dadoAntigoTarefa.status,
+      body.data_criacao || dadoAntigoTarefa.data_criacao
+      )
+      // Remove dado antigo do usuário e adiciona o novo ao banco de dados
+      const TarefaAtualizada = bd.tarefa.splice(indexTarefa, 1, dadoNovaTarefa)
+
+      respo.json({
+        "Tarefa Nova": dadoNovaTarefa,
+        "Dados antigos": TarefaAtualizada
+      })
+    } else {
+      respo.json(`Tarefa não encontrada`)
+    }
+    respo.send(`Dado ${dadoNovaTarefa} atualizado`)
+  })
 }
 
 module.exports = tarefa
