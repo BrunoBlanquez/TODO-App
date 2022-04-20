@@ -1,5 +1,3 @@
-// import express from 'express';
-// let app = express()
 const express = require('express')
 const app = express()
 
@@ -19,15 +17,6 @@ const bd = require("./infra/bd")
 usuario(app, bd)
 solicitante(app, bd)
 tarefa(app, bd)
-
-// importa classes
-const Tarefa = require("./models/tarefa")
-const Usuario = require("./models/usuario")
-
-// instancia novas classe
-// const tarefa1 = new Tarefa('Body Parser', 'Aprender sobre body-parser', 'em andamento', '18.04.2022')
-// const usuarioTony = new Usuario('Tony', 'tony.email@gmail.com', '123456')
-
 
 app.listen(3000, () => {
   console.log(`Servidor rodando na porta 3000`);

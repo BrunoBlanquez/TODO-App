@@ -1,4 +1,4 @@
-const res = require("express/lib/response")
+// const res = require("express/lib/response")
 const Tarefa = require("../models/tarefa")
 
  const tarefa = (app, bd) => {
@@ -24,8 +24,24 @@ const Tarefa = require("../models/tarefa")
       "erro": false //Só pra me dizer que não teve erro
       })
     } catch (error) {
-      res.json({"mensagem": error})
+      respo.json({"mensagem": error})
     }
+  })
+
+   app.delete('/tarefa/:nome', (req, respo) => {
+    const nomeParametro = req.params.nome;
+    const indexTarefa = bd.tarefa.findIndex(tarefa => tarefa.nome == nomeParametro)
+    
+    // If que verifica se encontrou o index
+    if (indexUsuario > -1) {
+      // Uso splice para remover 1 item a partir da posição definida em indexTarefa
+      const tarefaDeletada = bd.tarefa.splice(indexTarefa, 1)
+      respo.json({"Tarefa": tarefaDeletada})
+      console.log(`Tarefa de index ${indexTarefa} deletada`)
+    } else {
+      respo.json(`Tarefa não encontrado`)
+    }
+    respo.send(`Tarefa: ${nomeParametro} deletada`)
   })
 }
 
