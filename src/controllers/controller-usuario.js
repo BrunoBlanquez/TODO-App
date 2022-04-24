@@ -4,7 +4,10 @@ const Usuario = require("../models/usuario")
 
  const usuario = (app, bd) => {
   app.get('/usuario', function(req, respo) {
-    respo.json({"usuarios": bd.usuario})
+    bd.all('SELECT * FROM USUARIOS', (error, rows) => {
+      // Usando operador ternário para tornar o código mais limpo
+      error ? respo.json('Erro na seleção do banco') : respo.json({"Banco de usuários": rows})
+    })
   })
 
   app.get('/usuario/:email', function(req, respo) {

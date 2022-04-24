@@ -6,16 +6,14 @@ app.use(express.json())
 
 // importa rotas 
 const usuario = require('./controllers/controller-usuario')
-const solicitante = require('./controllers/controller-solicitante')
 const tarefa = require('./controllers/controller-tarefa')
 
-// Importa banco de dados fictício
-const bd = require("./infra/bd")
+// Importa banco de dados do SQLite
+const bd = require("./infra/sqlite-db")
 
 // executa arquivos importados; 
   // banco de dados (bd) foi integrado e os controllers foram modificados para receberem dados do bd
 usuario(app, bd)
-solicitante(app, bd)
 tarefa(app, bd)
 
 app.listen(3000, () => {
