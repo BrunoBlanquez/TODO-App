@@ -1,12 +1,19 @@
 // const res = require("express/lib/response")
 const res = require("express/lib/response")
 const Usuario = require("../models/usuario")
+const UsuarioDAO = require("../dao/usuario-dao")
 
  const usuario = (app, bd) => {
+  // Instanciando usuário DAO para puxar os métodos
+  const instanciaDAO = new UsuarioDAO(bd)
+
   app.get('/usuario', function(req, respo) {
-    bd.all('SELECT * FROM USUARIOS', (error, rows) => {
-      // Usando operador ternário para tornar o código mais limpo
-      error ? respo.json('Erro na seleção do banco') : respo.json({"Banco de usuários": rows})
+    instanciaDAO.listarUsuarios()
+    .then((resposta) => {
+      respo.json(resposta)
+    })
+    .catch((error) => {
+      respo.json(error)
     })
   })
 
@@ -25,24 +32,32 @@ const Usuario = require("../models/usuario")
   })
 
   app.post('/usuario', function(req, respo) {
-    try {
-    const body = req.body
-    // instancia um novo usuario usando a Class
-    const novoUsuario = new Usuario(body.nome, body.email, body.senha)
+    // Forma antiga, sem DAO
+  //   try {
+  //     // instancia um novo usuario usando a Class
 
-    // adiciona ao banco de dados
-    bd.usuario.push(novoUsuario)
-    console.log(bd.usuario)
-    
-    // Resposta da requisição
-    respo.json({ 
-      "novoUsuário": novoUsuario, 
-      "erro": false //Só pra me dizer que não teve erro
-      })
+  //     // Comando para o SQLite executar uma query (run)
+  //       // Executando uma query para inserir algo no BD
+  //     bd.run(`INSERT INTO USUARIOS (NOME, EMAIL, SENHA) VALUES (?, ?, ?)`, [novoUsuario.nome, novoUsuario.email, novoUsuario.senha],
+  //     (error) => {
+  //       error ? respo.json(error) : respo.json('Funfou, ta dentro')
+  //     })
+  //   } catch (error) {
+  //     respo.json({"mensagem": error})
+  //   }
 
-    } catch (error) {
-      resp.json({"mensagem": error})
-    }
+
+  // USANDO DAO
+  const body = req.body
+  const novoUsuario = new Usuario(body.nome, body.email, body.senha)
+  instanciaDAO.inserirUsuarios(novoUsuario)
+  .then((resposta) => {
+      respo.json(resposta)
+    })
+    .catch((error) => {
+      console.log(error)
+      respo.json(error)
+    })
   })
 
   app.delete('/usuario/:nome', (req, respo) => {
