@@ -1,3 +1,5 @@
+const { response } = require("express")
+
 class UsuarioDAO {
   constructor(bd) {
     this.bd = bd
@@ -19,12 +21,23 @@ class UsuarioDAO {
     })
   }
 
-  updateUsuario() {
+  updateUsuario(userID, nomeNovo, emailNovo, senhaNova) {
+    return new Promise((resolve, reject) => {
+      this.bd.run(`UPDATE USUARIOS SET nome = ?, email = ?, senha = ? where id = ${userID}`, [nomeNovo, emailNovo, senhaNova], (error) => {
+        error ? reject(error) : resolve('Vald lindo')
+      })
+    })
+  } 
 
-  }
-
-  deletarUsuarios() {
-
+  deletarUsuarios(idUser) {
+    // If que verifica se encontrou o index
+    return new Promise((resolve, reject) => {
+      if (idUser > -1) {
+        this.bd.run(`DELETE FROM USUARIOS WHERE ID = ${idUser}`, (error) => {
+          error ? reject(error) : resolve(`Usuário de ID ${idUser} deletado`)
+        })
+      }
+    })
   }
 }
 
